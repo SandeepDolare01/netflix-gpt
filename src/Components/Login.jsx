@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header";
+import { checkValidData } from "../utils/validate";
 
 function Login() {
   const [isSignInForm, setisSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
 
   const handleSignInForm = () => {
     setisSignInForm(!isSignInForm);
+  };
+
+  const handleClickButton = () => {
+    // console.log(email);
+    // console.log(password);
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
   };
 
   return (
@@ -19,7 +30,11 @@ function Login() {
       </div>
 
       <div className="bg-black/60">
-        <form className="relative w-4/12  bg-black/80 top-30 left-[550px] px-18 py-12">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+          className="relative w-4/12  bg-black/80 top-40 left-[550px] px-18 py-12">
           <h1 className="text-white text-4xl font-bold">
             {isSignInForm ? "Sign In" : "Sign Up"}
           </h1>
@@ -32,16 +47,21 @@ function Login() {
           )}
 
           <input
+            ref={email}
             type="email"
             placeholder="email address"
             className="bg-black/70 text-gray-200 h-12 rounded-md p-2 mt-3 w-full"
           />
           <input
+            ref={password}
             type="password"
             placeholder="password"
             className="bg-black/70 text-gray-200 h-12 rounded-md p-2 mt-3 w-full"
           />
-          <button className="p-3 mt-5 rounded-md  bg-red-500 w-full text-white text-m font-bold cursor-pointer">
+          <p className="font-bold text-red-500">{errorMessage}</p>
+          <button
+            onClick={handleClickButton}
+            className="p-3 mt-5 rounded-md  bg-red-500 w-full text-white text-m font-bold cursor-pointer">
             Sign in
           </button>
           <h1 className="text-white z-1">Forgot password?</h1>
